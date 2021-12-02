@@ -1,0 +1,27 @@
+trigger: none
+
+pool: ubuntu-latest
+
+stages:
+    - stage: Build
+      displayName: Build image
+      jobs:
+            - job: Build
+              displayName: Build
+              steps:
+                  - task: DownloadGitHubRelease@0
+                    inputs:
+                      connection: 'anukgupt_github'
+                      userRepository: 'hello-world'
+                      defaultVersionType: 'latest'
+                      downloadPath: '$(System.ArtifactsDirectory)'
+                  - task: PublishBuildArtifacts@1
+                    displayName: 'Publish Artifact: artifact1'
+                    inputs:
+                        PathtoPublish: README.md
+                        ArtifactName: artifact1
+                  - task: DownloadBuildArtifacts@1
+                    inputs:
+                      buildType: 'current'
+                      downloadType: 'specific'
+                      downloadPath: 'agent-path'
